@@ -53,7 +53,9 @@
 </template>
 
 <script>
-import { Tooltip } from 'element-ui'
+import Tooltip from 'element-ui/lib/tooltip.js'
+import 'element-ui/lib/theme-chalk/tooltip.css';
+import 'element-ui/packages/theme-chalk/src/common/transition.scss';
 
 const DayTimes = 24 * 2;
 

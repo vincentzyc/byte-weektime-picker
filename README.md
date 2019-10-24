@@ -1,24 +1,36 @@
 # byte-weektime-picker
 
-## Project setup
+## 安装
 ```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+npm install byte-weektime-picker -S
 ```
 
-### Compiles and minifies for production
+### 引入
+
 ```
-npm run build
+//main.js中引入
+
+import ByteWeektimePicker from 'byte-weektime-picker'
+
+Vue.use(ByteWeektimePicker)
+
+```
+或者
+```
+//组件中引入
+
+import { ByteWeektimePicker } from 'byte-weektime-picker'
+
+components: {
+  ByteWeektimePicker
+}
+
 ```
 
-### Lints and fixes files
+### 使用
+
 ```
-npm run lint
+<byte-weektime-picker v-model="byteTime" />
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+详见 [demo源码](https://github.com/vincentzyc/byte-weektime-picker/blob/master/src/App.vue)

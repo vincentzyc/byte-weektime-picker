@@ -7,6 +7,7 @@
 </template>
 
 <script>
+// 组件内局部引用
 import { ByteWeektimePicker } from './index'
 
 export default {

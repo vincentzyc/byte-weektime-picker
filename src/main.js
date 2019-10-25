@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+// 全局引用
 // import ByteWeektimePicker from './index'
 
 // Vue.use(ByteWeektimePicker)

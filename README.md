@@ -8,7 +8,7 @@ npm install byte-weektime-picker -S
 ### 引入
 
 ```
-//main.js中引入
+//main.js中全局引入
 
 import ByteWeektimePicker from 'byte-weektime-picker'
 
@@ -17,7 +17,7 @@ Vue.use(ByteWeektimePicker)
 ```
 或者
 ```
-//组件中引入
+//组件中局部引入
 
 import { ByteWeektimePicker } from 'byte-weektime-picker'
 

@@ -165,6 +165,7 @@ export default {
       let weeksSelect = [], listlength = list.length;
       this.showTimeText = [];
       if (listlength === 0) return;
+      // 把 336长度的 list 分成 7 组，每组 48 个
       for (var i = 0; i < listlength; i += DayTimes) {
         weeksSelect.push(list.slice(i, i + DayTimes));
       }
@@ -172,14 +173,25 @@ export default {
         this.showTimeText.push(this.getTimeText(item))
       });
     },
-    getTimeText(arrTime) {
-      if (!Array.isArray(arrTime)) return "";
-      let timeLength = arrTime.length,
+    getTimeText(arrIndex) {
+      if (!Array.isArray(arrIndex)) return "";
+
+      /*方法一 matchAll 正则匹配 （速度较慢） */
+      // let strIndex = arrIndex.join('');
+      // let arrMatches = Array.from(strIndex.matchAll(/1+/g));
+      // let textTimeIndex = [],timeText = "";
+      // arrMatches.forEach(value => {
+      //   textTimeIndex.push(value.index);
+      //   textTimeIndex.push(value.index + value[0].length);
+      // })
+      /*方法一 end */
+
+      /**方法二 循环 （速度是方法一的十倍）*/
+      let timeLength = arrIndex.length,
         isSelect = false,
         textTimeIndex = [],
         timeText = "";
-
-      arrTime.forEach((value, index) => {
+      arrIndex.forEach((value, index) => {
         if (value === '1') {
           if (!isSelect) {
             textTimeIndex.push(index);
@@ -193,6 +205,7 @@ export default {
           }
         }
       })
+      /*方法二 end */
 
       textTimeIndex.forEach((item, index) => {
         if (index % 2 === 1) {
@@ -201,7 +214,6 @@ export default {
           timeText += this.timeTextList[item]
         }
       });
-
       return timeText.slice(0, -1)
     },
     initList(value) {
@@ -227,7 +239,9 @@ export default {
 </script>
 
 <style scoped>
-div,span,p {
+div,
+span,
+p {
   margin: 0;
   padding: 0;
   border: 0;

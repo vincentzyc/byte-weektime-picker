@@ -67,6 +67,12 @@ export default {
   props: {
     value: String
   },
+  watch: {
+    value(n) {
+      if (n.split('') === this.list.join('')) return;
+      this.initList(n);
+    }
+  },
   data() {
     return {
       isMove: false,

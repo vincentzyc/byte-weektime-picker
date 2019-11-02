@@ -32,5 +32,3 @@ components: {
 ```
 <byte-weektime-picker v-model="byteTime" />
 ```
-
-详见 [demo源码](https://github.com/vincentzyc/byte-weektime-picker/blob/master/src/components/demo.vue)

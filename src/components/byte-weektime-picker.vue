@@ -22,10 +22,10 @@
             v-for="(i,key) in weekTimes"
             :key="key"
             :data-index="key"
-            effect="dark"
             :content="tiptxt(key)"
-            placement="top"
             :open-delay="800"
+            placement="top"
+            effect="dark"
           >
             <div class="time-cell" :class="{'active':list[key]==='1','pre-active':preViewIndex.includes(key)}"></div>
           </el-tooltip>

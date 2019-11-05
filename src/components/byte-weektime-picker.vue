@@ -155,6 +155,7 @@ export default {
     },
     /**
      * 设置和展示选择的时间段并赋给绑定的值
+     * @param {Array} indexList 选择的index数组
      */
     setSelectIndex(indexList) {
       if (!Array.isArray(indexList)) return;

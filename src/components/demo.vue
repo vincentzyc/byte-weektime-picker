@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      byteTime: words.num1,
+      byteTime: words.zyc,
       second: 5,
       timer: null,
       time: 1000,

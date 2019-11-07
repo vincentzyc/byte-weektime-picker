@@ -106,7 +106,7 @@ export default {
   line-height: 24px;
 }
 .demo-wrapper .btn-wrap {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
 }

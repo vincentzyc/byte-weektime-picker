@@ -79,7 +79,7 @@ export default {
       list: [],
       weekTimes: 7 * DayTimes,
       weekDays: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
-      timeTextList: [],
+      timeTextList: [], //显示的时间数组 ["00:00","00:30","01:00",...]
       startIndex: 0,
       axis: {},
       preViewIndex: [],
@@ -154,7 +154,7 @@ export default {
       return indexList
     },
     /**
-     * 设置和展示选择的时间段并赋给绑定的值
+     * 设置选择的时间段并赋给绑定的值
      * @param {Array} indexList 选择的index数组
      */
     setSelectIndex(indexList) {
@@ -167,6 +167,10 @@ export default {
       this.$emit('input', this.list.join(''));
       this.showSelectTime(this.list);
     },
+    /**
+     * 展示选择的时间段
+     * @param {Array} list 已选择的list数组
+     */
     showSelectTime(list) {
       if (!Array.isArray(list)) return;
       let weeksSelect = [], listlength = list.length;

@@ -190,41 +190,33 @@ export default {
       /*方法一 matchAll 正则匹配 （速度较慢） */
       // let strIndex = arrIndex.join('');
       // let arrMatches = Array.from(strIndex.matchAll(/1+/g));
-      // let textTimeIndex = [],timeText = "";
+      // let timeText = "";
       // arrMatches.forEach(value => {
-      //   textTimeIndex.push(value.index);
-      //   textTimeIndex.push(value.index + value[0].length);
+      //   timeText += this.timeTextList[value.index];
+      //   timeText += '~' + this.timeTextList[value.index + value[0].length] + '、';
       // })
       /*方法一 end */
 
-      /**方法二 循环 （速度是方法一的十倍）*/
+      /**方法二 循环 （速度是方法一的十倍+）*/
       let timeLength = arrIndex.length,
         isSelect = false,
-        textTimeIndex = [],
         timeText = "";
       arrIndex.forEach((value, index) => {
         if (value === '1') {
           if (!isSelect) {
-            textTimeIndex.push(index);
+            timeText += this.timeTextList[index]
             isSelect = true;
           }
-          if (index === timeLength - 1) textTimeIndex.push(index + 1);
+          if (index === timeLength - 1) timeText += '~' + this.timeTextList[index + 1] + '、';
         } else {
           if (isSelect) {
-            textTimeIndex.push(index);
+            timeText += '~' + this.timeTextList[index] + '、'
             isSelect = false;
           }
         }
       })
       /*方法二 end */
 
-      textTimeIndex.forEach((item, index) => {
-        if (index % 2 === 1) {
-          timeText += '~' + this.timeTextList[item] + '、'
-        } else {
-          timeText += this.timeTextList[item]
-        }
-      });
       return timeText.slice(0, -1)
     },
     initList(value) {

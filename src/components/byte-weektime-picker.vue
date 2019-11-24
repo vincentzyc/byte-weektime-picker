@@ -333,7 +333,7 @@ p {
   border-left: 1px solid #efefef;
   border-top: 1px solid #efefef;
   overflow: hidden;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
   outline-width: 0;
 }
 .weektime .time-cell.active {
@@ -348,7 +348,7 @@ p {
   bottom: 0;
   background: transparent;
   opacity: 0.5;
-  transition: background 888ms ease;
+  transition: all 866ms ease;
   z-index: 99999;
 }
 .weektime .pre-active::after {

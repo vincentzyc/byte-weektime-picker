@@ -9,17 +9,17 @@
             <div class="weektime-date-range">12:00 - 24:00</div>
           </div>
           <div class="weektime-hd-con-bottom">
-            <span class="weektime-date-cell" v-for="hour in 24" :key="hour">{{hour-1}}</span>
+            <span class="weektime-date-cell" v-for="hour in 24" :key="hour">{{ hour - 1 }}</span>
           </div>
         </div>
       </div>
       <div class="weektime-bd">
         <div class="week-body">
-          <div v-for="week in weekDays" :key="week" class="week-item">{{week}}</div>
+          <div v-for="week in weekDays" :key="week" class="week-item">{{ week }}</div>
         </div>
         <div class="time-body" @mousedown="handleMousedown" @mouseup="handleMouseup" @mousemove="handleMousemove">
           <el-tooltip
-            v-for="(i,key) in weekTimes"
+            v-for="(i, key) in weekTimes"
             :key="key"
             :data-index="key"
             :content="tiptxt(key)"
@@ -27,7 +27,14 @@
             placement="top"
             effect="dark"
           >
-            <div class="time-cell" :class="{'active':list[key]==='1','pre-active':preViewIndex.includes(key)}"></div>
+            <div
+              class="time-cell"
+              :class="{
+                active: list[key] === '1',
+                'pre-active': preViewIndex.includes(key),
+                disable: disableTimes.includes(key),
+              }"
+            ></div>
           </el-tooltip>
         </div>
       </div>
@@ -43,9 +50,9 @@
         <div class="weektime-help-ft" @click="initList()">清空选择</div>
       </div>
       <div class="weektime-help-select">
-        <p v-for="(week,key) in weekDays" :key="key" v-show="showTimeText[key]">
-          <span class="weektime-help-week-tx">{{week+"："}}</span>
-          <span>{{showTimeText[key]}}</span>
+        <p v-for="(week, key) in weekDays" :key="key" v-show="showTimeText[key]">
+          <span class="weektime-help-week-tx">{{ week + '：' }}</span>
+          <span>{{ showTimeText[key] }}</span>
         </p>
       </div>
     </div>
@@ -53,25 +60,28 @@
 </template>
 
 <script>
-import Tooltip from 'element-ui/lib/tooltip.js'
+import Tooltip from 'element-ui/lib/tooltip.js';
 import 'element-ui/lib/theme-chalk/tooltip.css';
 import 'element-ui/packages/theme-chalk/src/common/transition.scss';
 
 const DayTimes = 24 * 2;
 
 export default {
-  name: "byte-weektime-picker",
+  name: 'byte-weektime-picker',
   components: {
-    "el-tooltip": Tooltip
+    'el-tooltip': Tooltip,
   },
   props: {
-    value: String
+    value: String,
+    startTime: Number,
+    endTime: Number,
+    customDisableTimes: Array,
   },
   watch: {
     value(n) {
       if (n.split('') === this.list.join('')) return;
       this.initList(n);
-    }
+    },
   },
   data() {
     return {
@@ -83,8 +93,23 @@ export default {
       startIndex: 0,
       axis: {},
       preViewIndex: [],
-      showTimeText: []
-    }
+      showTimeText: [],
+    };
+  },
+  computed: {
+    disableTimes() {
+      if (Array.isArray(this.customDisableTimes) && this.customDisableTimes.every(num => typeof num === 'number'))
+        return this.customDisableTimes;
+      if (this.startTime > -1 && this.endTime > -1) {
+        const disabled = [];
+        for (let index = 0; index < this.weekTimes; index++) {
+          const firstIdx = index % DayTimes;
+          if (this.startTime > firstIdx || this.endTime < firstIdx) disabled.push(index);
+        }
+        return disabled;
+      }
+      return [];
+    },
   },
   methods: {
     /**
@@ -93,40 +118,43 @@ export default {
     tiptxt(index) {
       let timeIndex = index % DayTimes;
       let weekIndex = ~~(index / DayTimes);
-      return `${this.weekDays[weekIndex]} ${this.timeTextList[timeIndex]}~${this.timeTextList[timeIndex + 1]}`
+      return `${this.weekDays[weekIndex]} ${this.timeTextList[timeIndex]}~${this.timeTextList[timeIndex + 1]}`;
     },
     /**
      * 初始化显示的时间数组
      * @return {Array} ["00:00","00:30","01:00",...]
      */
     initTimeText() {
-      let timeTextList = [], hours = [], minutes = ['00', '30'];
+      let timeTextList = [],
+        hours = [],
+        minutes = ['00', '30'];
       for (let i = 0; i <= 24; i++) {
-        i < 10 ? hours.push('0' + i) : hours.push(i.toString())
+        i < 10 ? hours.push('0' + i) : hours.push(i.toString());
       }
       for (const hour of hours) {
         for (const minute of minutes) {
-          timeTextList.push(`${hour}:${minute}`)
+          timeTextList.push(`${hour}:${minute}`);
         }
       }
-      return timeTextList
+      return timeTextList;
     },
     handleMousedown(event) {
-      this.isMove = true;
       this.startIndex = event.target.getAttribute('data-index');
+      if (this.disableTimes.includes(~~this.startIndex)) return;
+      this.isMove = true;
       this.axis.startx = this.startIndex % DayTimes;
       this.axis.starty = ~~(this.startIndex / DayTimes);
     },
     handleMouseup(event) {
       this.handleMousemove(event);
-      this.resetMousemove()
+      this.resetMousemove();
     },
     handleMousemove(event) {
       if (!this.isMove) return;
       let index = event.target.getAttribute('data-index');
       this.axis.endx = index % DayTimes;
       this.axis.endy = ~~(index / DayTimes);
-      this.preViewIndex = this.getSelectIndex()
+      this.preViewIndex = this.getSelectIndex();
     },
     resetMousemove() {
       if (!this.isMove) return;
@@ -144,14 +172,14 @@ export default {
           startx: Math.min(this.axis.startx, this.axis.endx),
           starty: Math.min(this.axis.starty, this.axis.endy),
           endx: Math.max(this.axis.startx, this.axis.endx),
-          endy: Math.max(this.axis.starty, this.axis.endy)
-        }
+          endy: Math.max(this.axis.starty, this.axis.endy),
+        };
       for (let y = newAxis.starty; y <= newAxis.endy; y++) {
         for (let x = newAxis.startx; x <= newAxis.endx; x++) {
-          indexList.push(x + y * DayTimes)
+          indexList.push(x + y * DayTimes);
         }
       }
-      return indexList
+      return indexList.filter(v => !this.disableTimes.includes(v));
     },
     /**
      * 设置选择的时间段并赋给绑定的值
@@ -173,7 +201,8 @@ export default {
      */
     showSelectTime(list) {
       if (!Array.isArray(list)) return;
-      let weeksSelect = [], listlength = list.length;
+      let weeksSelect = [],
+        listlength = list.length;
       this.showTimeText = [];
       if (listlength === 0) return;
       // 把 336长度的 list 分成 7 组，每组 48 个
@@ -181,11 +210,11 @@ export default {
         weeksSelect.push(list.slice(i, i + DayTimes));
       }
       weeksSelect.forEach(item => {
-        this.showTimeText.push(this.getTimeText(item))
+        this.showTimeText.push(this.getTimeText(item));
       });
     },
     getTimeText(arrIndex) {
-      if (!Array.isArray(arrIndex)) return "";
+      if (!Array.isArray(arrIndex)) return '';
 
       /*方法一 matchAll 正则匹配 （速度较慢） */
       // let strIndex = arrIndex.join('');
@@ -200,27 +229,27 @@ export default {
       /**方法二 循环 （速度是方法一的十倍+）*/
       let timeLength = arrIndex.length,
         isSelect = false,
-        timeText = "";
+        timeText = '';
       arrIndex.forEach((value, index) => {
         if (value === '1') {
           if (!isSelect) {
-            timeText += this.timeTextList[index]
+            timeText += this.timeTextList[index];
             isSelect = true;
           }
           if (index === timeLength - 1) timeText += '~' + this.timeTextList[index + 1] + '、';
         } else {
           if (isSelect) {
-            timeText += '~' + this.timeTextList[index] + '、'
+            timeText += '~' + this.timeTextList[index] + '、';
             isSelect = false;
           }
         }
-      })
+      });
       /*方法二 end */
 
-      return timeText.slice(0, -1)
+      return timeText.slice(0, -1);
     },
     initList(value) {
-      let reg = new RegExp("^[01]{" + this.weekTimes + "}$");
+      let reg = new RegExp('^[01]{' + this.weekTimes + '}$');
       if (value && reg.test(value)) {
         this.list = value.split('');
         return this.showSelectTime(this.list);
@@ -228,17 +257,17 @@ export default {
       this.list = new Array(this.weekTimes).fill('0');
       this.$emit('input', this.list.join(''));
       this.showSelectTime(this.list);
-    }
+    },
   },
   destroyed() {
-    document.removeEventListener('mouseup', this.resetMousemove)
+    document.removeEventListener('mouseup', this.resetMousemove);
   },
   created() {
     this.timeTextList = this.initTimeText();
     document.addEventListener('mouseup', this.resetMousemove);
     this.initList(this.value);
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -339,8 +368,11 @@ p {
 .weektime .time-cell.active {
   background: #2d8cf0;
 }
+.weektime .time-cell.disable {
+  cursor: no-drop;
+}
 .weektime .time-cell::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -353,6 +385,9 @@ p {
 }
 .weektime .pre-active::after {
   background: #113860;
+}
+.weektime .disable::after {
+  background: #cccccc;
 }
 .time-area {
   width: 576px;

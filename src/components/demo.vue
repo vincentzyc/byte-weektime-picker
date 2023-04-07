@@ -1,7 +1,7 @@
 <template>
   <div class="demo-wrapper">
     <div class="demo">
-      <h1 class="title">投放时段选择器</h1>
+      <h1 class="title">时段选择器</h1>
       <byte-weektime-picker v-model="byteTime" />
       <p class="value">绑定值：{{byteTime}}</p>
     </div>

@@ -32,3 +32,9 @@ components: {
 ```
 <byte-weektime-picker v-model="byteTime" />
 ```
+支持的prop
+```
+  startTime: Number,  //自定义开始时段，0-47，每1代表半小时，星期一到星期日都生效
+  endTime: Number,    //自定义结束时段，0-47，每1代表半小时，星期一到星期日都生效
+  customDisableTimes: Array, //自定义禁用时段，数字数组，0-335
+```
